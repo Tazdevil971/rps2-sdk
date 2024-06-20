@@ -1,0 +1,15 @@
+[package]
+name = "rps2-kernel"
+version = "0.1.0"
+edition = "2021"
+authors = ["Davide Mor <tazdevil971@gmail.com>"]
+
+[features]
+critical-section = ["dep:critical-section"]
+libtest-capture = []
+atomics = []
+
+[dependencies.critical-section]
+version = "1"
+features = ["restore-state-bool"]
+optional = true

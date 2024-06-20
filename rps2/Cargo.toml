@@ -1,0 +1,12 @@
+[package]
+name = "rps2"
+version = "0.1.0"
+edition = "2021"
+authors = ["Davide Mor <tazdevil971@gmail.com>"]
+
+[dependencies]
+rps2-kernel = { workspace = true, features = ["critical-section", "atomics"] }
+rps2-startup = { workspace = true, features = ["alloc"] }
+rps2-panic = { workspace = true }
+rps2-pac = { workspace = true }
+rps2-thread = { workspace = true }

@@ -1,0 +1,11 @@
+[package]
+name = "hello-world"
+version = "0.1.0"
+edition = "2021"
+authors = ["Davide Mor <tazdevil971@gmail.com>"]
+default-run = "hello-world"
+
+[dependencies]
+rps2-kernel = { workspace = true }
+rps2 = { workspace = true }
+rps2-startup = { workspace = true }

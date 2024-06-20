@@ -1,0 +1,4 @@
+{
+    "rust-analyzer.check.allTargets": false,
+    "rust-analyzer.cargo.target": "mips64el-ps2-elf.json"
+}

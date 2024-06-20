@@ -1,0 +1,11 @@
+[package]
+name = "rps2-thread"
+version = "0.1.0"
+edition = "2021"
+authors = ["Davide Mor <tazdevil971@gmail.com>"]
+
+[dependencies]
+rps2-kernel = { workspace = true }
+rps2-panic = { workspace = true }
+scopeguard = { version = "1", default-features = false }
+critical-section = "1"

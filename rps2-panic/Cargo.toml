@@ -1,0 +1,22 @@
+[package]
+name = "rps2-panic"
+version = "0.1.0"
+edition = "2021"
+authors = ["Davide Mor <tazdevil971@gmail.com>"]
+
+[features]
+default = ["unwinding"]
+unwinding = ["dep:unwinding"]
+tracker = []
+
+[dependencies]
+rps2-kernel = { workspace = true }
+smallvec = { version = "1", features = ["const_new"] }
+critical-section = "1"
+
+[dependencies.unwinding]
+optional = true
+git = "https://github.com/Tazdevil971/unwinding-r5900.git"
+rev = "2bad967827cf663fedfbd8c5ca269f554c7eeec4"
+default-features = false
+features = ["soft-float", "unwinder", "fde-gnu-eh-frame-hdr", "personality", "panic", "dwarf-expr"]

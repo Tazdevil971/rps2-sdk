@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = [
+    "rps2",
+    "rps2-kernel",
+    "rps2-thread",
+    "rps2-panic",
+    "rps2-libtest",
+    "rps2-libtest/macros",
+    "rps2-startup",
+    "rps2-startup/macros",
+    "rps2-pac",
+    "samples/hello-world"
+]
+
+[workspace.dependencies]
+rps2 = { path = "rps2" }
+rps2-kernel = { path = "rps2-kernel" }
+rps2-thread = { path = "rps2-thread" }
+rps2-panic = { path = "rps2-panic" }
+rps2-libtest = { path = "rps2-libtest" }
+rps2-startup = { path = "rps2-startup" }
+rps2-pac = { path = "rps2-pac" }

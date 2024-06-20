@@ -1,0 +1,4 @@
+/.pcsx2
+/target
+/Cargo.lock
+**/__pycache__/

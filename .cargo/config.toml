@@ -1,0 +1,19 @@
+[build]
+target = "mips64el-ps2-elf.json"
+
+[target.mips64el-ps2-elf]
+runner = "./scripts/runner-pcsx2.sh"
+# runner = "./scripts/runner-pcsx2-dbg.sh"
+# runner = "./scripts/runner-remote.sh"
+
+# No longer needed after new llvm
+# https://github.com/nbdd0121/unwinding/issues/34
+# [profile.dev.package.unwinding]
+# opt-level = 1
+
+[unstable]
+build-std = ["core", "alloc"]
+build-std-features = ["compiler-builtins-mem"]
+
+[patch.crates-io]
+compiler_builtins = { git = "https://github.com/Tazdevil971/compiler-builtins.git" }

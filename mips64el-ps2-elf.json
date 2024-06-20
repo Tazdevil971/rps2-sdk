@@ -1,0 +1,20 @@
+{
+    "arch": "mips64",
+    "cpu": "r5900",
+    "abi": "abin32",
+    "target-endian": "little",
+    "crt-objects-fallback": "false",
+    "data-layout": "e-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32:64-S128",
+    "emit-debug-gdb-scripts": false,
+    "linker": "rust-lld",
+    "linker-flavor": "gnu-lld",
+    "llvm-target": "mips64el-ps2-elf",
+    "llvm-abiname": "n32",
+    "max-atomic-width": 64,
+    "panic-strategy": "unwind",
+    "relocation-model": "static",
+    "target-pointer-width": "32",
+    "late-link-args": {
+        "gnu": ["-Tlink.x"]
+    }
+}
