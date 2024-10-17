@@ -11,5 +11,6 @@ This currently includes:
 - A simple testing harness via `rps2-libtest`.
 - A rusty threading interface and utilities via `rps2-thread`.
 - And all tied together with `rps2`, offering an environment similar to `std`.
+- A (currently not so)-full unit tests of `rps2`.
 
-This repo also contains some usage examples under `samples/` and a bunch of unit tests (coming soon!)
+This repo also contains some usage examples under `samples/`.

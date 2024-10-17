@@ -1,0 +1,9 @@
+[package]
+name = "rps2-tests"
+version = "0.1.0"
+edition = "2021"
+authors = ["Davide Mor <tazdevil971@gmail.com>"]
+
+[dependencies]
+rps2-libtest = { workspace = true }
+rps2 = { workspace = true }

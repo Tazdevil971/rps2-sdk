@@ -14,7 +14,10 @@ pub mod prelude {
 pub mod sync {
     pub use alloc_crate::sync::*;
     pub use core::sync::*;
+    pub use rps2_thread::lazy_lock::*;
     pub use rps2_thread::mutex::*;
+    pub use rps2_thread::once::*;
+    pub use rps2_thread::once_lock::*;
     pub use rps2_thread::sema::*;
 
     pub mod mpmc {
