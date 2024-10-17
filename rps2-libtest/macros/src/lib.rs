@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
-use quote::quote;
+use quote::{quote, ToTokens};
 use syn::parse::ParseStream;
 use syn::{parse_macro_input, AttrStyle, Attribute, Expr, ItemFn, Lit, LitStr, Meta, Path, Token};
 
@@ -31,6 +31,22 @@ pub fn test(args: TokenStream, input: TokenStream) -> TokenStream {
 
     let mut f = parse_macro_input!(input as ItemFn);
 
+    if f.sig.asyncness.is_some()
+        || f.sig.unsafety.is_some()
+        || f.sig.abi.is_some()
+        || !f.sig.generics.params.is_empty()
+        || f.sig.generics.where_clause.is_some()
+        || !f.sig.inputs.is_empty()
+        || f.sig.variadic.is_some()
+    {
+        return syn::Error::new_spanned(
+            f.into_token_stream(),
+            "`#[test]` functions must have signature `fn() [-> impl Termination]`",
+        )
+        .to_compile_error()
+        .into();
+    }
+
     let test_attrs = match extract_attrs(&mut f.attrs) {
         Ok(res) => res,
         Err(err) => return err.to_compile_error().into(),
@@ -43,7 +59,7 @@ pub fn test(args: TokenStream, input: TokenStream) -> TokenStream {
     let mut test = quote! {
         __rps2_libtest::TestBuilder::new(
             ::core::concat!(::core::module_path!(), "::", #name),
-            #func
+            || __rps2_libtest::__hidden::test_invoke(#func)
         )
     };
 
@@ -137,7 +153,7 @@ fn parse_should_panic(attr: Attribute) -> syn::Result<ShouldPanic> {
             if let Ok(res) = meta.parse_args_with(|parser: ParseStream| {
                 let path = parser.parse::<Path>()?;
                 if !path.is_ident("expected") {
-                    // This error doesn't really matter
+                    // This error doesn't really matter, it will be overwritten anyway
                     return Err(syn::Error::new_spanned(&attr, "..."));
                 }
 

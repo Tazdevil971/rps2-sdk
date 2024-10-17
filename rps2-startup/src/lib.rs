@@ -78,7 +78,7 @@ clear_bss:
 
 #[cfg(feature = "alloc")]
 mod allocator {
-    use embedded_alloc::LlffHeap as Heap;
+    use embedded_alloc::TlsfHeap as Heap;
 
     #[global_allocator]
     static HEAP: Heap = Heap::empty();
