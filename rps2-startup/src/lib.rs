@@ -47,14 +47,8 @@ __stage0_entry:
     la $t0, __BSS_START
     la $t1, __BSS_END
 clear_bss:
-    # FIXME: sq is not yet supported
-    # sq $zero, 0($v0)
-    # addiu $v0, $v0, 0x10
-    # sltu $t2, $v0, $v1
-    # bne $t2, $zero, clear_bss
-
-    sd $zero, 0($v0)
-    addiu $v0, $v0, 0x8
+    sq $zero, 0($v0)
+    addiu $v0, $v0, 0x10
     sltu $t2, $v0, $v1
     bne $t2, $zero, clear_bss
 
