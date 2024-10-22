@@ -167,3 +167,19 @@ macro_rules! interrupt_disable_guard {
         let _guard = $crate::arch::interrupt_disable_guard();
     };
 }
+
+pub mod cop0 {
+    use super::*;
+
+    pub fn get_count() -> u32 {
+        let mut count;
+        unsafe {
+            asm!(
+                ".set noat",
+                "mfc0 {}, $9",
+                out(reg) count
+            );
+        }
+        count
+    }
+}
