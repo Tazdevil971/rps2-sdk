@@ -25,6 +25,8 @@ static mut ARGS: RawArgs = unsafe { core::mem::zeroed() };
 
 global_asm!(
     r#"
+# FIXME: Workaround for llvm-project#98673 and llvm-project#97685
+.set arch=r5900
 .text
 
 # Default stack size for main is 64kb
@@ -124,6 +126,10 @@ unsafe extern "C" fn __stage1_entry() -> ! {
 }
 
 unsafe fn __stage2_entry() -> i32 {
+    core::arch::asm!(
+        "sq $zero, 0($v0)"
+    );
+
     // Initialize env module
     #[allow(static_mut_refs)]
     rps2_kernel::env::setup_argcv(ARGS.argc, ARGS.argv.as_ptr());
