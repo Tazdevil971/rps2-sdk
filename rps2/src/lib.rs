@@ -14,19 +14,22 @@ pub mod prelude {
 pub mod sync {
     pub use alloc_crate::sync::*;
     pub use core::sync::*;
-    pub use rps2_thread::lazy_lock::*;
-    pub use rps2_thread::mutex::*;
-    pub use rps2_thread::once::*;
-    pub use rps2_thread::once_lock::*;
-    pub use rps2_thread::sema::*;
+
+    pub use rps2_thread::lazy_lock::LazyLock;
+    pub use rps2_thread::mutex::{IrqMutexGuard, Mutex, MutexGuard};
+    pub use rps2_thread::once::Once;
+    pub use rps2_thread::once_lock::OnceLock;
+    pub use rps2_thread::sema::{Sema, SemaBuilder};
 
     pub mod mpmc {
-        pub use rps2_thread::mpmc::*;
+        pub use rps2_thread::mpmc::{BoundedQueue, UnboundedQueue};
     }
 }
 
 pub mod thread {
-    pub use rps2_thread::thread::*;
+    pub use rps2_thread::thread::{
+        current, panicking, rotate_ready_queue, sleep, spawn, Builder, JoinHandle, Result, Thread,
+    };
 
     pub mod ffi {
         pub use rps2_thread::ffi::*;
@@ -67,5 +70,5 @@ pub mod vec {
 
 pub mod panic {
     pub use core::panic::*;
-    pub use rps2_panic::*;
+    pub use rps2_panic::{abort, catch_unwind, panic_any, panicking, set_backtrace_enabled};
 }
