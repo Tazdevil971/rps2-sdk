@@ -1,4 +1,9 @@
 #![no_std]
-#![no_main]
 
 mod sync;
+
+fn main() {
+    rps2_libtest::start::start();
+
+    loop {}
+}

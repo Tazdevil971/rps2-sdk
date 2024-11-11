@@ -1,8 +1,8 @@
 #![no_std]
 extern crate alloc as alloc_crate;
+extern crate rps2_startup;
 
 pub use rps2_kernel::{dbg, interrupt_disable_guard, kprint, kprintln};
-pub use rps2_startup::entry;
 
 pub mod prelude {
     pub use crate::boxed::Box;

@@ -10,3 +10,4 @@ rps2-startup = { workspace = true, features = ["alloc"] }
 rps2-panic = { workspace = true }
 rps2-pac = { workspace = true }
 rps2-thread = { workspace = true }
+rps2-allocator = { workspace = true }

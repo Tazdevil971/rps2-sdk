@@ -1,9 +1,9 @@
-use core::ffi::{c_char, CStr};
+use core::ffi::CStr;
 
 static mut ARGC: u32 = 0;
-static mut ARGV: *const *const c_char = core::ptr::null();
+static mut ARGV: *const *const u8 = core::ptr::null();
 
-pub unsafe fn setup_argcv(argc: u32, argv: *const *const c_char) {
+pub unsafe fn setup_argcv(argc: u32, argv: *const *const u8) {
     ARGC = argc;
     ARGV = argv;
 }
@@ -21,13 +21,13 @@ pub fn args() -> Args {
 pub struct Args {
     idx: u32,
     argc: u32,
-    argv: *const *const c_char,
+    argv: *const *const u8,
 }
 
 impl Args {
     unsafe fn unchecked_get(&self, i: u32) -> &'static CStr {
         let arg = self.argv.add(i as usize).read();
-        CStr::from_ptr(arg)
+        CStr::from_ptr(arg as _)
     }
 }
 

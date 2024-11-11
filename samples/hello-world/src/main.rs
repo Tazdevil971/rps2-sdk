@@ -1,6 +1,4 @@
 #![no_std]
-#![no_main]
-
 use rps2::dbg;
 
 struct DetonatingBomb;
@@ -18,7 +16,6 @@ fn test1() {
     dbg!("Bruh4");
 }
 
-#[rps2::entry]
 fn main() {
     rps2::kprintln!("Cacati Adriano");
 

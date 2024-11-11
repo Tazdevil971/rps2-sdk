@@ -9,13 +9,13 @@ name = "libtest_tests"
 harness = false
 
 [features]
-no-entry = []
+start = ["rps2-startup/no-start"]
 
 [dependencies]
 rps2-libtest-macros = { path = "macros" }
 rps2-kernel = { workspace = true, features = ["libtest-capture"] }
 rps2-panic = { workspace = true }
-rps2-startup = { workspace = true }
+rps2-startup = { workspace = true, features = ["alloc"] }
 inventory = "0.3"
 critical-section = "1"
 getargs = { version = "0.5", default-features = false }

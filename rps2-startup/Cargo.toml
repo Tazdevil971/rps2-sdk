@@ -6,10 +6,10 @@ authors = ["Davide Mor <tazdevil971@gmail.com>"]
 
 [features]
 default = ["alloc"]
-alloc = ["dep:embedded-alloc", "rps2-kernel/critical-section"]
+alloc = ["dep:rps2-allocator"]
+no-start = []
 
 [dependencies]
-rps2-startup-macros = { path = "macros" }
 rps2-kernel = { workspace = true }
 rps2-panic = { workspace = true }
-embedded-alloc = { version = "0.6", optional = true }
+rps2-allocator = { workspace = true, optional = true }

@@ -10,6 +10,10 @@
     "linker-flavor": "gnu-lld",
     "llvm-target": "mips64el-ps2-elf",
     "llvm-abiname": "n32",
+    "llvm-args": [
+        "--enable-no-nans-fp-math",
+        "--enable-no-infs-fp-math"
+    ],
     "max-atomic-width": 64,
     "panic-strategy": "unwind",
     "relocation-model": "static",

@@ -1,17 +1,16 @@
 #![feature(asm_experimental_arch)]
+#![cfg_attr(not(feature = "no-start"), feature(lang_items))]
+#![cfg_attr(not(feature = "no-start"), allow(internal_features))]
 #![no_std]
 use core::arch::global_asm;
-use core::ffi::c_char;
 use core::fmt::Debug;
 use core::ptr::{addr_of, addr_of_mut};
-
-pub use rps2_startup_macros::entry;
 
 #[repr(C)]
 pub struct RawArgs {
     argc: u32,
-    argv: [*const c_char; 16],
-    payload: [c_char; 256],
+    argv: [*const u8; 16],
+    payload: [u8; 256],
 }
 
 // Used by stage0
@@ -72,21 +71,6 @@ clear_bss:
 "#
 );
 
-#[cfg(feature = "alloc")]
-mod allocator {
-    use embedded_alloc::TlsfHeap as Heap;
-
-    #[global_allocator]
-    static HEAP: Heap = Heap::empty();
-
-    pub(crate) unsafe fn init() {
-        let start = crate::start_of_heap();
-        let end = crate::end_of_heap();
-
-        HEAP.init(start as _, end as usize - start as usize)
-    }
-}
-
 extern "C" {
     static mut __HEAP_START: u8;
 
@@ -96,6 +80,15 @@ extern "C" {
     static __init_array_end: u8;
     static __fini_array_start: u8;
     static __fini_array_end: u8;
+}
+
+pub fn start_of_heap() -> *mut u8 {
+    // Also destroy provenance to prevent UB
+    addr_of_mut!(__HEAP_START) as usize as *mut u8
+}
+
+pub fn end_of_heap() -> *mut u8 {
+    unsafe { rps2_kernel::os::end_of_heap() as _ }
 }
 
 unsafe fn invoke_array(start: *const u8, end: *const u8) {
@@ -126,50 +119,60 @@ unsafe extern "C" fn __stage1_entry() -> ! {
 }
 
 unsafe fn __stage2_entry() -> i32 {
-    core::arch::asm!(
-        "sq $zero, 0($v0)"
-    );
-
-    // Initialize env module
+    let argc = ARGS.argc;
     #[allow(static_mut_refs)]
-    rps2_kernel::env::setup_argcv(ARGS.argc, ARGS.argv.as_ptr());
+    let argv = ARGS.argv.as_ptr();
 
     // Setup heap
     rps2_kernel::os::setup_heap(addr_of_mut!(__HEAP_START) as _, -1);
 
     // Initialize actual allocator if enabled
     #[cfg(feature = "alloc")]
-    allocator::init();
+    rps2_allocator::init(start_of_heap(), end_of_heap());
 
     // Enable interrupts just before rust starts
     rps2_kernel::arch::enable_interrupts();
 
+    // Initialize env module
+    #[allow(static_mut_refs)]
+    rps2_kernel::env::setup_argcv(argc, argv);
+
     // Perform standard libc initialization
     invoke_array(
-        addr_of!(__preinit_array_start),
-        addr_of!(__preinit_array_end),
+        addr_of!(__preinit_array_start) as usize as *mut u8,
+        addr_of!(__preinit_array_end) as usize as *mut u8,
     );
-    invoke_array(addr_of!(__init_array_start), addr_of!(__init_array_end));
+
+    invoke_array(
+        addr_of!(__init_array_start) as usize as *mut u8,
+        addr_of!(__init_array_end) as usize as *mut u8,
+    );
 
     // Invoke user code
-    let res = __stage3_entry();
+    let res = main(argc, argv);
 
     // Perform standard libc deinitialization
-    invoke_array(addr_of!(__fini_array_start), addr_of!(__fini_array_end));
+    invoke_array(
+        addr_of!(__fini_array_start) as usize as *mut u8,
+        addr_of!(__fini_array_end) as usize as *mut u8,
+    );
 
     res
 }
 
-extern "Rust" {
-    fn __stage3_entry() -> i32;
+extern "C" {
+    fn main(argc: u32, argv: *const *const u8) -> i32;
 }
 
-pub fn start_of_heap() -> *mut u8 {
-    addr_of_mut!(__HEAP_START)
-}
-
-pub fn end_of_heap() -> *mut u8 {
-    unsafe { rps2_kernel::os::end_of_heap() as _ }
+#[cfg(not(feature = "no-start"))]
+#[lang = "start"]
+fn lang_start<T: Termination + 'static>(
+    main: fn() -> T,
+    _argc: isize,
+    _argv: *const *const u8,
+    _sigpipe: u8,
+) -> isize {
+    rps2_panic::catch_unwind(|| main().report()).unwrap_or(101) as _
 }
 
 pub trait Termination {
@@ -197,18 +200,5 @@ impl<T: Termination, E: Debug> Termination for Result<T, E> {
                 1
             }
         }
-    }
-}
-
-#[doc(hidden)]
-pub mod __hidden {
-    use super::*;
-
-    #[inline(always)]
-    pub fn stage3_invoke<T: Termination>(f: fn() -> T) -> i32
-    where
-        T: Termination,
-    {
-        f().report()
     }
 }

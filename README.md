@@ -10,6 +10,7 @@ This currently includes:
 - Full unwinding support via `rps2-panic`.
 - A simple testing harness via `rps2-libtest`.
 - A rusty threading interface and utilities via `rps2-thread`.
+- Allocation support via `rps2-allocator`.
 - And all tied together with `rps2`, offering an environment similar to `std`.
 - A (currently not so)-full unit tests of `rps2`.
 

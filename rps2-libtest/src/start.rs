@@ -3,16 +3,17 @@ use crate::{printer, test, Args, Test};
 
 use alloc::vec::Vec;
 
-#[rps2_startup::entry]
-#[cfg(not(feature = "no-entry"))]
-fn testing_entry() {
-    main();
+// Bypass normal lang = "start" and directly provide a main function, this deactivates and rust main and directly connects to the startup code
+#[cfg(feature = "start")]
+#[no_mangle]
+extern "C" fn main(_argc: u32, _argv: *const *const u8) -> i32 {
+    start();
 
     // Do not return, let the user see the result clearly
     loop {}
 }
 
-pub fn main() {
+pub fn start() {
     let args = Args::parse_args();
 
     if args.list {
