@@ -1,33 +1,15 @@
+#![feature(mips_target_feature)]
 #![no_std]
 use rps2::dbg;
 
-struct DetonatingBomb;
-
-fn test() {
-    dbg!("Bruh2");
-    panic!("Yeet");
-    dbg!("Bruh3");
-}
-
-fn test1() {
-    let _bomb = DetonatingBomb;
-    dbg!("Bruh1");
-    test();
-    dbg!("Bruh4");
+fn black_box(i: f32) -> f32 {
+    unsafe {
+        core::ptr::read_volatile(&i)
+    }
 }
 
 fn main() {
-    rps2::kprintln!("Cacati Adriano");
-
-    dbg!("We are here");
-
-    let _ = rps2::panic::catch_unwind(|| {
-        dbg!("Also here?");
-        test1();
-        dbg!("But never here!");
-    });
-
-    dbg!("And now here? Magic");
+    rps2::kprintln!("Cacati Adriano {}", black_box(1.5));
 
     funny_colors();
 }

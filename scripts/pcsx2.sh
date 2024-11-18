@@ -5,7 +5,7 @@ set -e
 ROOT=$(realpath $(dirname "$0")/..)
 
 # Some variables to control
-PCSX2_VERSION=v1.7.5724
+PCSX2_VERSION=v2.3.14
 PCSX2_EXE="pcsx2-$PCSX2_VERSION-linux-appimage-x64-Qt.AppImage"
 PCSX2_URL="https://github.com/PCSX2/pcsx2/releases/download/$PCSX2_VERSION/$PCSX2_EXE"
 
