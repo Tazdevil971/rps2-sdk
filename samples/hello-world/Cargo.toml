@@ -9,3 +9,4 @@ default-run = "hello-world"
 rps2-kernel = { workspace = true }
 rps2 = { workspace = true }
 rps2-startup = { workspace = true }
+glam = { version = "0.29", default-features = false, features = ["libm"] }

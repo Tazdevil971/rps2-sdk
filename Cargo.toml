@@ -23,3 +23,6 @@ rps2-panic = { path = "rps2-panic" }
 rps2-libtest = { path = "rps2-libtest" }
 rps2-startup = { path = "rps2-startup" }
 rps2-pac = { path = "rps2-pac" }
+
+[profile.dev]
+overflow-checks = false

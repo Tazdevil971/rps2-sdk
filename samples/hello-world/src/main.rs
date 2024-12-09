@@ -1,16 +1,6 @@
-#![feature(mips_target_feature)]
 #![no_std]
-use rps2::dbg;
-
-fn black_box(i: f32) -> f32 {
-    unsafe {
-        core::ptr::read_volatile(&i)
-    }
-}
 
 fn main() {
-    rps2::kprintln!("Cacati Adriano {}", black_box(1.5));
-
     funny_colors();
 }
 
